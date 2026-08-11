@@ -1,0 +1,204 @@
+<% content_for :title, "The Long Road Club — Made for the Drive" %>
+
+<div class="site-shell" data-controller="forum">
+  <div class="announcement">
+    <div class="wrap announcement__inner">
+      <span><strong>THE WEEKEND BRIEF</strong> — The finest drives, reads & garage wisdom. Every Saturday.</span>
+      <a href="#newsletter">Get on the list <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="wrap header__inner">
+      <a class="brand" href="/" aria-label="The Long Road Club home">
+        <svg class="brand__mark" viewBox="0 0 64 64" role="img" aria-label="Steering wheel">
+          <circle cx="32" cy="32" r="27" fill="none" stroke="currentColor" stroke-width="4"/>
+          <circle cx="32" cy="32" r="7" fill="none" stroke="currentColor" stroke-width="4"/>
+          <path d="M8 29h17m14 0h17M28 37l-9 17m17-17 9 17" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+        <span class="brand__type">THE LONG ROAD <em>CLUB</em></span>
+      </a>
+
+      <button class="nav-toggle" type="button" data-action="forum#toggleNav" aria-label="Toggle menu">
+        <span></span><span></span>
+      </button>
+
+      <nav class="main-nav" data-forum-target="nav" aria-label="Main navigation">
+        <%= link_to "Discussions", discussions_path, class: "is-active" %>
+        <%= link_to "Garage", garage_features_path %>
+        <%= link_to "Events", events_path %>
+        <%= link_to "Guides", guides_path %>
+      </nav>
+
+      <div class="header__actions">
+        <%= form_with url: discussions_path, method: :get, class: "search-box" do %>
+          <span class="sr-only">Search discussions</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg>
+          <%= search_field_tag :q, nil, placeholder: "Search the club", data: { forum_target: "query", action: "input->forum#filter" } %>
+        <% end %>
+        <% if signed_in? %>
+          <%= link_to "Start a discussion", new_discussion_path, class: "button button--dark" %>
+          <%= link_to current_user.initials, user_path(current_user), class: "account-chip", title: current_user.name %>
+        <% else %>
+          <%= link_to "Join the club", signup_path, class: "button button--dark" %>
+        <% end %>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero__grid">
+        <div class="hero__copy">
+          <div class="eyebrow"><span></span> EST. 2026 · INDIA</div>
+          <h1>Made for the drive.<br><em>Built for the stories.</em></h1>
+          <p>A thoughtful home for people who care about cars—whether you wrench on classics, hunt for the perfect road, or just never skip the long way home.</p>
+          <div class="hero__actions">
+            <a class="button button--orange" href="#discussions">Explore discussions <span>→</span></a>
+            <a class="text-link" href="#garage"><span class="play-icon">▶</span> Tour the garage</a>
+          </div>
+          <div class="member-proof">
+            <div class="avatar-stack" aria-hidden="true">
+              <span>RM</span><span>AK</span><span>VS</span><span>+</span>
+            </div>
+            <p><strong><%= number_with_delimiter(User.count) %> founding enthusiasts</strong><br>already along for the ride</p>
+          </div>
+        </div>
+
+        <div class="hero__art" aria-label="Illustration of a classic roadster on a mountain road">
+          <div class="sun-disc"></div>
+          <svg viewBox="0 0 760 500" role="img">
+            <path class="mountain mountain--back" d="M0 255 103 172l68 45 102-115 79 111 68-66 90 86 72-63 178 87v243H0Z"/>
+            <path class="mountain mountain--front" d="M0 327 86 255l87 62 81-85 91 93 74-53 100 75 72-69 169 64v158H0Z"/>
+            <path class="road" d="M0 429c174-8 242-75 348-67 113 8 184 68 412 47v91H0Z"/>
+            <path class="road-line" d="M0 463c180-3 255-67 356-59 117 8 186 58 404 42"/>
+            <g class="car">
+              <ellipse cx="385" cy="405" rx="175" ry="23" class="car-shadow"/>
+              <path d="M232 367c11-22 39-36 83-42l58-61c10-10 20-14 35-14h65c18 0 29 4 44 19l52 55 57 15c16 4 28 18 30 35l2 20H220l2-12c2-7 5-11 10-15Z" class="car-body"/>
+              <path d="m384 270-50 54h104v-54Z" class="car-glass"/>
+              <path d="M452 270v54h91l-45-45c-7-7-15-9-25-9Z" class="car-glass"/>
+              <path d="M311 327h255" class="car-line"/>
+              <path d="M249 347h55m244 0h66" class="car-bumper"/>
+              <ellipse cx="292" cy="390" rx="39" ry="40" class="tyre"/>
+              <ellipse cx="292" cy="390" rx="17" ry="18" class="hub"/>
+              <ellipse cx="572" cy="390" rx="39" ry="40" class="tyre"/>
+              <ellipse cx="572" cy="390" rx="17" ry="18" class="hub"/>
+              <circle cx="605" cy="350" r="15" class="headlight"/>
+              <path d="M407 340h34" class="door-handle"/>
+            </g>
+          </svg>
+          <div class="hero-stamp"><span>TAKE THE</span><strong>SCENIC</strong><span>ROUTE</span></div>
+        </div>
+      </div>
+      <div class="hero-ticker" aria-label="Community topics">
+        <div class="wrap ticker__inner"><span>OWNERSHIP</span><i>✦</i><span>ROAD TRIPS</span><i>✦</i><span>MOTORSPORT</span><i>✦</i><span>CLASSICS</span><i>✦</i><span>BUYING ADVICE</span><i>✦</i><span>DIY & CARE</span></div>
+      </div>
+    </section>
+
+    <section class="content-section" id="discussions">
+      <div class="wrap content-grid">
+        <div class="discussion-column">
+          <div class="section-heading">
+            <div><div class="eyebrow eyebrow--small"><span></span> FROM THE COMMUNITY</div><h2>Fresh discussions</h2></div>
+            <%= link_to discussions_path do %>View all discussions <span>→</span><% end %>
+          </div>
+
+          <div class="topic-list">
+            <% @topics.each do |topic| %>
+              <article class="topic-card" data-forum-target="topic">
+                <div class="topic-card__main">
+                  <div class="topic-meta"><span class="category category--<%= topic.category.color %>"><%= topic.category.name %></span><% if topic.featured? || topic.replies_count >= 100 %><span class="hot">● TRENDING</span><% end %></div>
+                  <h3><%= link_to topic.title, discussion_path(topic) %></h3>
+                  <p><%= topic.excerpt %></p>
+                  <div class="author-row">
+                    <span class="avatar avatar--<%= topic.user.avatar_color %>"><%= topic.user.initials %></span>
+                    <span>Started by <strong><%= link_to topic.user.name, user_path(topic.user) %></strong></span><i>·</i><span><%= time_ago_in_words(topic.last_posted_at) %> ago</span>
+                  </div>
+                </div>
+                <div class="topic-card__stats">
+                  <button class="save-button <%= "is-saved" if @bookmarked_ids.include?(topic.id) %>" type="button" data-action="forum#bookmark" data-bookmark-url="<%= signed_in? ? discussion_bookmark_path(topic) : nil %>" aria-label="<%= @bookmarked_ids.include?(topic.id) ? "Remove bookmark" : "Save discussion" %>">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4Z"/></svg>
+                  </button>
+                  <div><strong><%= compact_number(topic.replies_count) %></strong><span>REPLIES</span></div>
+                  <div><strong><%= compact_number(topic.views_count) %></strong><span>VIEWS</span></div>
+                </div>
+              </article>
+            <% end %>
+            <% if @topics.empty? %><div class="empty-state">No discussions yet. <%= link_to "Start the first one", new_discussion_path %>.</div><% end %>
+          </div>
+        </div>
+
+        <aside class="sidebar">
+          <% if @garage_feature %><section class="garage-card" id="garage">
+            <div class="garage-card__image">
+              <span class="feature-label">GARAGE OF THE WEEK</span>
+              <svg viewBox="0 0 480 270" role="img" aria-label="Classic teal coupe">
+                <rect width="480" height="270" fill="#d9d0ba"/>
+                <path d="M0 205c76-14 143-5 202-21 91-24 152-6 278 1v85H0Z" fill="#b5ad95"/>
+                <circle cx="393" cy="47" r="55" fill="#d9854f" opacity=".85"/>
+                <path d="M76 171h328" stroke="#244b42" stroke-width="2" opacity=".35"/>
+                <path d="M89 173c12-25 35-37 70-39l58-61h91c22 0 38 8 55 26l34 37 25 9c15 6 22 16 24 32H78Z" fill="#28675e" stroke="#173f36" stroke-width="5"/>
+                <path d="m228 84-42 49h88V84Zm60 0v49h80l-36-37c-9-9-18-12-31-12Z" fill="#cbd8d2" stroke="#173f36" stroke-width="4"/>
+                <circle cx="157" cy="177" r="31" fill="#26312e" stroke="#eee6d4" stroke-width="8"/><circle cx="157" cy="177" r="9" fill="#d9854f"/>
+                <circle cx="372" cy="177" r="31" fill="#26312e" stroke="#eee6d4" stroke-width="8"/><circle cx="372" cy="177" r="9" fill="#d9854f"/>
+                <circle cx="414" cy="151" r="11" fill="#f4d992"/>
+              </svg>
+            </div>
+            <div class="garage-card__body">
+              <span class="garage-kicker"><%= @garage_feature.car_name.upcase %> · <%= @garage_feature.city.upcase %></span>
+              <h3>“<%= @garage_feature.title %>”</h3>
+              <p><%= @garage_feature.summary %></p>
+              <%= link_to garage_feature_path(@garage_feature) do %>Step inside the garage <span>→</span><% end %>
+            </div>
+          </section><% end %>
+
+          <section class="events-card" id="events">
+            <div class="aside-heading"><div><span>UPCOMING</span><h3>Meet the community</h3></div><%= link_to "Full calendar", events_path %></div>
+            <% @events.each do |event| %>
+              <article class="event-row">
+                <div class="date-block"><strong><%= event.starts_at.strftime("%d") %></strong><span><%= event.starts_at.strftime("%b").upcase %></span></div>
+                <div><h4><%= link_to event.title, event_path(event) %></h4><p><svg viewBox="0 0 24 24"><path d="M12 21s7-6 7-12a7 7 0 1 0-14 0c0 6 7 12 7 12Z"/><circle cx="12" cy="9" r="2"/></svg><%= event.location %></p><small><%= pluralize(event.rsvps_count, "driver") %> going</small></div>
+              </article>
+            <% end %>
+          </section>
+        </aside>
+      </div>
+    </section>
+
+    <section class="guides-section" id="guides">
+      <div class="wrap guides-grid">
+        <div>
+          <div class="eyebrow eyebrow--light"><span></span> THE WORKSHOP MANUAL</div>
+          <h2>Knowledge worth<br><em>getting your hands dirty for.</em></h2>
+        </div>
+        <div class="guide-links">
+          <% @guides.each_with_index do |guide, index| %>
+            <%= link_to guide_path(guide) do %><span><%= format("%02d", index + 1) %></span><div><strong><%= guide.title %></strong><small><%= guide.read_time_minutes %> min read · <%= guide.section %></small></div><b>↗</b><% end %>
+          <% end %>
+        </div>
+      </div>
+    </section>
+
+    <section class="newsletter" id="newsletter">
+      <div class="wrap newsletter__inner">
+        <div class="newsletter__mark">LRC</div>
+        <div><span>THE WEEKEND BRIEF</span><h2>Good roads and great reads. <em>(No noise)</em></h2><p>A Saturday morning dispatch for curious drivers.</p></div>
+        <%= form_with url: newsletter_subscriptions_path, method: :post, class: "newsletter__form" do %>
+          <label><span class="sr-only">Email address</span><%= email_field_tag :email, current_user&.email, placeholder: "you@example.com", required: true %></label>
+          <%= hidden_field_tag :source, "homepage" %>
+          <button type="submit">Subscribe <span>→</span></button>
+        <% end %>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer__inner">
+      <a class="brand brand--footer" href="/"><svg class="brand__mark" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="32" cy="32" r="7" fill="none" stroke="currentColor" stroke-width="4"/><path d="M8 29h17m14 0h17M28 37l-9 17m17-17 9 17" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg><span class="brand__type">THE LONG ROAD <em>CLUB</em></span></a>
+      <p>Made with care for India’s motoring community.<br>© 2026 The Long Road Club.</p>
+      <div class="footer__links"><a href="#about">About</a><a href="#code">Community code</a><a href="#contact">Contact</a><a href="#instagram">Instagram</a></div>
+    </div>
+  </footer>
+
+  <div class="toast" data-forum-target="toast" role="status">You’re in. Welcome to The Long Road Club.</div>
+</div>

@@ -1,0 +1,17 @@
+<% content_for :title, "Sign In — The Long Road Club" %>
+<div class="site-shell inner-page">
+  <%= render "shared/inner_header" %>
+  <main class="auth-page">
+    <div class="auth-card auth-card--small">
+      <div class="eyebrow"><span></span> WELCOME BACK</div>
+      <h1>Back behind the wheel.</h1>
+      <p>Sign in to reply, bookmark, and join upcoming drives.</p>
+      <%= form_with url: session_path, class: "club-form" do |form| %>
+        <label><span>Email</span><%= email_field_tag :email, params[:email], required: true, autocomplete: "email", autofocus: true %></label>
+        <label><span>Password</span><%= password_field_tag :password, nil, required: true, autocomplete: "current-password" %></label>
+        <%= form.submit "Sign in", class: "button button--orange form-submit" %>
+      <% end %>
+      <p class="auth-switch">New here? <%= link_to "Join the club", signup_path %></p>
+    </div>
+  </main>
+</div>

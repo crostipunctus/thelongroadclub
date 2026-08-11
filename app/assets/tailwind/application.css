@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Avenir Next Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+}

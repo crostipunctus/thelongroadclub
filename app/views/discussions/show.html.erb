@@ -1,0 +1,22 @@
+<% content_for :title, "#{@discussion.title} — The Long Road Club" %>
+<div class="site-shell inner-page">
+  <%= render "shared/inner_header" %>
+  <main class="page-wrap discussion-page" data-controller="thread">
+    <nav class="breadcrumbs"><%= link_to "Discussions", discussions_path %><span>→</span><%= link_to @discussion.category.name, discussions_path(category: @discussion.category.slug) %></nav>
+    <article class="original-post">
+      <header><div class="topic-meta"><span class="category category--<%= @discussion.category.color %>"><%= @discussion.category.name %></span><% if @discussion.locked? %><span class="hot">LOCKED</span><% end %></div><h1><%= @discussion.title %></h1><div class="post-author"><span class="avatar avatar--<%= @discussion.user.avatar_color %>"><%= @discussion.user.initials %></span><div><strong><%= link_to @discussion.user.name, @discussion.user %></strong><small>@<%= @discussion.user.username %> · <%= time_ago_in_words(@discussion.created_at) %> ago</small></div></div></header>
+      <div class="prose"><%= simple_format(@discussion.body) %></div>
+      <footer><span><%= pluralize(@discussion.views_count, "view") %></span><span><%= pluralize(@discussion.replies_count, "reply") %></span><% if @discussion.editable_by?(current_user) %><%= link_to "Edit", edit_discussion_path(@discussion) %><% end %></footer>
+    </article>
+
+    <section class="replies"><h2><%= pluralize(@posts.size, "reply") %></h2>
+      <% @posts_by_parent[nil].to_a.each do |post| %>
+        <%= render "discussions/post", post: post, discussion: @discussion, posts_by_parent: @posts_by_parent, depth: 0 %>
+      <% end %>
+    </section>
+
+    <% if @discussion.open? %>
+      <section class="reply-box"><h2>Join the discussion</h2><% if signed_in? %><%= form_with model: [@discussion, @post], class: "club-form" do |form| %><%= form.text_area :body, rows: 6, required: true, placeholder: "Add something useful…" %><%= form.submit "Post reply", class: "button button--orange" %><% end %><% else %><p><%= link_to "Sign in", login_path, class: "text-link" %> to reply to this discussion.</p><% end %></section>
+    <% end %>
+  </main>
+</div>

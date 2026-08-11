@@ -1,0 +1,40 @@
+<article class="comment <%= "comment--nested" if depth.positive? %>" id="post-<%= post.id %>" data-depth="<%= depth %>">
+  <div class="comment__body">
+    <header class="comment__header">
+      <div class="comment__author">
+        <span class="avatar avatar--<%= post.user.avatar_color %>"><%= post.user.initials %></span>
+        <div><strong><%= link_to post.user.name, post.user %></strong><small>@<%= post.user.username %></small></div>
+      </div>
+      <div class="comment__meta"><time><%= post.created_at.strftime("%d %b %Y, %H:%M") %></time><%= link_to "##{post.id}", discussion_path(discussion, anchor: "post-#{post.id}") %></div>
+    </header>
+    <% if post.parent %>
+      <div class="comment__context">Replying to <%= link_to post.parent.user.name, discussion_path(discussion, anchor: "post-#{post.parent.id}") %></div>
+    <% end %>
+    <div class="prose comment__content"><%= simple_format(post.body) %></div>
+    <footer class="comment__footer">
+      <% if post.edited_at %><small class="edited">Edited <%= time_ago_in_words(post.edited_at) %> ago</small><% end %>
+      <% if signed_in? && discussion.open? && depth < 3 %>
+        <button type="button" class="comment__reply-button" data-action="thread#toggleReply" data-reply-form="reply-form-<%= post.id %>" aria-expanded="false">Reply</button>
+      <% end %>
+    </footer>
+
+    <% if signed_in? && discussion.open? && depth < 3 %>
+      <div class="nested-reply-form" id="reply-form-<%= post.id %>" hidden>
+        <%= form_with model: [discussion, Post.new], class: "club-form" do |form| %>
+          <%= form.hidden_field :parent_id, value: post.id %>
+          <%= form.text_area :body, rows: 4, required: true, id: "reply_body_#{post.id}", placeholder: "Reply to #{post.user.name.split.first}…" %>
+          <%= form.submit "Post nested reply", class: "button button--dark" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <% children = posts_by_parent[post.id].to_a %>
+  <% if children.any? %>
+    <div class="comment-children" aria-label="Replies to <%= post.user.name %>">
+      <% children.each do |child| %>
+        <%= render "discussions/post", post: child, discussion: discussion, posts_by_parent: posts_by_parent, depth: depth + 1 %>
+      <% end %>
+    </div>
+  <% end %>
+</article>

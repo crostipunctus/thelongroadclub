@@ -1,0 +1,25 @@
+<% content_for :title, "Discussions — The Long Road Club" %>
+<div class="site-shell inner-page">
+  <%= render "shared/inner_header" %>
+  <main class="page-wrap">
+    <div class="listing-heading">
+      <div><div class="eyebrow"><span></span> FROM THE COMMUNITY</div><h1>Discussions</h1><p>Real experiences, useful advice, and the occasional beautifully unnecessary deep dive.</p></div>
+      <% if signed_in? %><%= link_to "Start a discussion", new_discussion_path, class: "button button--orange" %><% end %>
+    </div>
+    <%= form_with url: discussions_path, method: :get, class: "filter-bar" do %>
+      <%= search_field_tag :q, params[:q], placeholder: "Search discussions" %>
+      <%= select_tag :category, options_from_collection_for_select(@categories, :slug, :name, params[:category]), include_blank: "All categories" %>
+      <button type="submit">Search</button>
+    <% end %>
+    <div class="thread-index">
+      <% @discussions.each do |discussion| %>
+        <article class="thread-row">
+          <span class="avatar avatar--<%= discussion.user.avatar_color %>"><%= discussion.user.initials %></span>
+          <div><div class="topic-meta"><span class="category category--<%= discussion.category.color %>"><%= discussion.category.name %></span><% if discussion.pinned? %><span class="hot">● PINNED</span><% end %></div><h2><%= link_to discussion.title, discussion %></h2><p><%= discussion.excerpt(length: 180) %></p><small>By <%= link_to discussion.user.name, discussion.user %> · active <%= time_ago_in_words(discussion.last_posted_at) %> ago</small></div>
+          <div class="thread-row__stats"><strong><%= compact_number(discussion.replies_count) %></strong><span>replies</span><strong><%= compact_number(discussion.views_count) %></strong><span>views</span></div>
+        </article>
+      <% end %>
+      <% if @discussions.empty? %><div class="empty-state">Nothing matched that search.</div><% end %>
+    </div>
+  </main>
+</div>

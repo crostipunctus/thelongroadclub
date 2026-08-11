@@ -1,0 +1,7 @@
+<%= render "shared/errors", record: discussion %>
+<%= form_with model: discussion, class: "club-form discussion-form" do |form| %>
+  <label><span>Category</span><%= form.collection_select :category_id, @categories, :id, :name, { prompt: "Choose a category" }, required: true %></label>
+  <label><span>Title</span><%= form.text_field :title, required: true, maxlength: 140, placeholder: "What would you like to discuss?" %></label>
+  <label><span>Your story or question</span><%= form.text_area :body, required: true, rows: 12, placeholder: "Give the community enough detail to offer a thoughtful response…" %></label>
+  <%= form.submit discussion.persisted? ? "Save changes" : "Start discussion", class: "button button--orange form-submit" %>
+<% end %>
